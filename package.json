@@ -1,6 +1,12 @@
 {
 	"main": "lib/index.js",
 	"scripts": {
+		"start": "node lib/index.js",
+		"compile": "tsc",
+		"build": "npm run build:clean && npm run compile",
+		"build:clean": "rm -rf ./lib",
+		"build:watch": "tsc --watch",
+		"test": "echo \"Error: no test specified\" && exit 1",
 		"genkit:start": "genkit start -- tsx --watch src/index.ts"
 	},
 	"name": "genkit-daytona",
@@ -8,7 +14,10 @@
 		"node": "18"
 	},
 	"dependencies": {
+		"@genkit-ai/ai": "^0.9.7",
+		"@genkit-ai/core": "^0.9.7",
 		"@genkit-ai/firebase": "^0.9.7",
+		"@genkit-ai/flow": "^0.5.17",
 		"@genkit-ai/googleai": "^0.9.7",
 		"express": "^4.21.1",
 		"firebase-admin": "^12.6.0",

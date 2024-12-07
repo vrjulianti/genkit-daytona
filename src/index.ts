@@ -13,24 +13,24 @@ const ai = genkit({
 		// the recommended practice.
 		googleAI(),
 	],
-	promptDir: './prompts',
+	promptDir: "./prompts",
 });
 
 // Define a simple flow that prompts an LLM to generate menu suggestions.
 export const stackRecomFlow = ai.defineFlow(
 	{
-	  name: 'stackRecomFlow',
-	  inputSchema: z.object({
-		title: z.string(),
-		description: z.string(),
-	  }),
-	  outputSchema: z.string(),
+		name: "stackRecomFlow",
+		inputSchema: z.object({
+			title: z.string(),
+			description: z.string(),
+		}),
+		outputSchema: z.string(),
 	},
-	async ({ title, description}) => {
-	  const response = await ai.generate({
-		model: gemini15Flash,
-		prompt: `provide a tech stack recommendation for a ${title} project with the following description: ${description}`,
-	  });
-	  return response.text;
+	async ({ title, description }) => {
+		const response = await ai.generate({
+			model: gemini15Flash,
+			prompt: `provide a tech stack recommendation for a ${title} project with the following description: ${description}`,
+		});
+		return response.text;
 	}
-  );
+);
