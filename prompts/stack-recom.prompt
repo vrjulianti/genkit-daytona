@@ -1,0 +1,24 @@
+---
+model: googleai/gemini-1.5-flash
+config:
+  temperature: 0.4
+  topK: 32
+  topP: 0.95
+input:
+  schema:
+    title: string
+    description?: string
+    level?: string
+    expertise?: string
+  default:
+    title: ""
+    description: ""
+    level: ""
+    expertise: ""
+---
+
+Generate Tech Stack Recommendations for a Client's Project based on this input:
+title: {{ title }}
+description: {{ description }}
+level: {{ level }}
+expertise: {{ expertise }}

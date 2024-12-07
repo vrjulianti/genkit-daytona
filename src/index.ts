@@ -3,8 +3,6 @@ import { genkit, z } from "genkit";
 
 // From the Firebase plugin, import the functions needed to deploy flows using
 // Cloud Functions.
-import { firebaseAuth } from "@genkit-ai/firebase/auth";
-import { onFlow } from "@genkit-ai/firebase/functions";
 import { gemini15Flash, googleAI } from "@genkit-ai/googleai";
 
 const ai = genkit({
@@ -15,44 +13,24 @@ const ai = genkit({
 		// the recommended practice.
 		googleAI(),
 	],
+	promptDir: './prompts',
 });
 
 // Define a simple flow that prompts an LLM to generate menu suggestions.
-export const menuSuggestionFlow = onFlow(
-	ai,
+export const stackRecomFlow = ai.defineFlow(
 	{
-		name: "menuSuggestionFlow",
-		inputSchema: z.string(),
-		outputSchema: z.string(),
-		authPolicy: firebaseAuth((user) => {
-			// By default, the firebaseAuth policy requires that all requests have an
-			// `Authorization: Bearer` header containing the user's Firebase
-			// Authentication ID token. All other requests are rejected with error
-			// 403. If your app client uses the Cloud Functions for Firebase callable
-			// functions feature, the library automatically attaches this header to
-			// requests.
-			// You should also set additional policy requirements as appropriate for
-			// your app. For example:
-			// if (!user.email_verified) {
-			//   throw new Error("Verified email required to run flow");
-			// }
-		}),
+	  name: 'stackRecomFlow',
+	  inputSchema: z.object({
+		title: z.string(),
+		description: z.string(),
+	  }),
+	  outputSchema: z.string(),
 	},
-	async (subject) => {
-		// Construct a request and send it to the model API.
-		const prompt = `Suggest an item for the menu of a ${subject} themed restaurant`;
-		const llmResponse = await ai.generate({
-			model: gemini15Flash,
-			prompt: prompt,
-			config: {
-				temperature: 1,
-			},
-		});
-
-		// Handle the response from the model API. In this sample, we just
-		// convert it to a string, but more complicated flows might coerce the
-		// response into structured output or chain the response into another
-		// LLM call, etc.
-		return llmResponse.text;
+	async ({ title, description}) => {
+	  const response = await ai.generate({
+		model: gemini15Flash,
+		prompt: `provide a tech stack recommendation for a ${title} project with the following description: ${description}`,
+	  });
+	  return response.text;
 	}
-);
+  );
